@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEW LAXMI ELECTRONICS AND ELECTRIC - Live Catalog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a; 
+            --accent: #e2b842;  
+            --whatsapp: #25D366; 
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+
+        .top-bar {
+            background-color: var(--accent); color: var(--primary); text-align: center;
+            padding: 8px; font-size: 12px; font-weight: 600; letter-spacing: 1px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white; text-align: center; padding: 50px 20px; border-bottom: 4px solid var(--accent);
+        }
+
+        .est-badge {
+            background: var(--accent); color: var(--primary); font-size: 11px;
+            font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px;
+        }
+
+        header h1 { font-size: 30px; font-weight: 700; text-transform: uppercase; }
+        header p { font-size: 13px; color: #94a3b8; max-width: 500px; margin: 5px auto 0 auto; }
+
+        .loader {
+            text-align: center; padding: 50px; font-size: 18px; color: var(--primary); font-weight: 500;
+        }
+
+        .catalog-container {
+            max-width: 1200px; margin: 30px auto; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;
+        }
+
+        .product-card {
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: var(--card-shadow); display: flex; flex-direction: column;
+            border: 1px solid #f1f5f9; transition: all 0.3s ease;
+        }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        .product-image-wrapper {
+            width: 100%; height: 240px; background-color: #f8fafc;
+            position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+
+        .product-image-wrapper img { width: 85%; height: 85%; object-fit: contain; cursor: pointer; }
+
+        .image-dots { position: absolute; bottom: 12px; display: flex; gap: 6px; }
+        .dot { width: 8px; height: 8px; background: #cbd5e1; border-radius: 50%; cursor: pointer; }
+        .dot.active { background: var(--primary); width: 18px; border-radius: 4px; }
+
+        .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .product-name { font-size: 16px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+        .product-price { font-size: 20px; color: var(--primary); font-weight: 700; margin-bottom: 15px; }
+
+        .whatsapp-btn {
+            display: flex; align-items: center; justify-content: center;
+            background-color: var(--whatsapp); color: white; text-decoration: none;
+            padding: 12px; border-radius: 10px; font-weight: 600; font-size: 14px; gap: 8px;
+        }
+        .whatsapp-btn svg { width: 18px; height: 18px; fill: white; }
+
+        footer {
+            background-color: var(--primary); color: #94a3b8; padding: 40px 20px; text-align: center;
+            border-top: 5px solid var(--accent); font-size: 13px; margin-top: 60px;
+        }
+        .footer-title { color: white; font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .footer-detail { margin-bottom: 6px; }
+        .footer-copyright { margin-top: 25px; padding-top: 20px; border-top: 1px solid #334155; font-size: 11px; }
+
+        .modal {
+            display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.96); backdrop-filter: blur(8px); justify-content: center; align-items: center;
+        }
+        .modal-content { max-width: 85%; max-height: 75%; background: white; padding: 10px; border-radius: 16px; }
+        .close-modal { position: absolute; top: 25px; right: 35px; color: white; font-size: 35px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">WELCOME TO NEW LAXMI ELECTRONICS AND ELECTRIC • SCAN & SHOP</div>
+
+    <header>
+        <span class="est-badge">ESTD. 2006</span>
+        <h1>NEW LAXMI ELECTRONICS AND ELECTRIC</h1>
+        <p>हमारे लाइव डिजिटल कैटलॉग में आपका स्वागत है।</p>
+    </header>
+
+    <div id="loader" class="loader">दुकान का सामान लोड हो रहा है, कृपया प्रतीक्षा करें...</div>
+
+    <div class="catalog-container" id="catalogBox"></div>
+
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="fullImage">
+    </div>
+
+    <footer>
+        <div class="footer-title">NEW LAXMI ELECTRONICS AND ELECTRIC</div>
+        <div class="footer-detail"><strong>Proprietor:</strong> Navin Kumar</div>
+        <div class="footer-detail"><strong>Address:</strong> Railway Crossing, Bikramganj, Rohtas, Bihar - 802212</div>
+        <div class="footer-detail"><strong>GSTIN:</strong> 10JIEPD5158M1Z7</div>
+        <div class="footer-detail"><strong>Contact:</strong> +91 7004164070, +91 7061301246</div>
+        <div class="footer-copyright">&copy; 2026 NEW LAXMI ELECTRONICS AND ELECTRIC.</div>
+    </footer>
+
+    <script>
+        const MY_WHATSAPP_NUMBER = "917004164070"; 
+        
+        // आपकी असली गूगल शीट आईडी यहाँ सेट कर दी गई है
+        const SHEET_ID = '1CYXk1mUlamsz_NzuVSI3ZwnN0oetD726Xzcqk5DrLuUw'; 
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+        let globalProducts = [];
+
+        async function fetchLiveCatalog() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const data = await response.text();
+                
+                const rows = data.split('\n').slice(1); 
+                globalProducts = rows.map(row => {
+                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if(columns.length >= 3) {
+                        return {
+                            name: columns[0].replace(/"/g, '').trim(),
+                            price: columns[1].replace(/"/g, '').trim(),
+                            img1: columns[2].replace(/"/g, '').trim(),
+                            img2: columns[3] ? columns[3].replace(/"/g, '').trim() : null
+                        };
+                    }
+                    return null;
+                }).filter(p => p !== null && p.name !== "");
+
+                document.getElementById('loader').style.display = 'none';
+                displayProducts();
+            } catch (error) {
+                console.error("Data load failed:", error);
+                document.getElementById('loader').innerText = "कैटलॉग लोड करने में समस्या आई। कृपया इंटरनेट चेक करें।";
+            }
+        }
+
+        function displayProducts() {
+            const container = document.getElementById('catalogBox');
+            container.innerHTML = '';
+
+            globalProducts.forEach((product, index) => {
+                const encodedName = encodeURIComponent(product.name);
+                let dotsHtml = '';
+                
+                if(product.img2) {
+                    dotsHtml = `
+                        <div class="image-dots">
+                            <span class="dot active" onclick="switchImg(${index}, 1, event)"></span>
+                            <span class="dot" onclick="switchImg(${index}, 2, event)"></span>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-image-wrapper">
+                            <img id="img-${index}" src="${product.img1}" alt="${product.name}" onclick="openModal(this.src)">
+                            ${dotsHtml}
+                        </div>
+                        <div class="product-info">
+                            <div>
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">${product.price}</div>
+                            </div>
+                            <a href="https://wa.me/${MY_WHATSAPP_NUMBER}?text=नमस्ते%20New%20Laxmi%20Electronics%20and%20Electric,%20मुझे%20*${encodedName}*%20के%20बारे%20में%20पूछना%20है।" target="_blank" class="whatsapp-btn">
+                                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.169 1.24 8.413 3.488 2.245 2.248 3.481 5.239 3.482 8.42-.003 6.557-5.338 11.907-11.89 11.907-2.013-.001-3.99-.51-5.747-1.483L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.742.002-2.602-1.012-5.05-2.859-6.892C16.58 2.074 14.131.06 11.53.058c-5.44 0-9.866 4.372-9.87 9.744-.002 1.761.488 3.479 1.418 5.013l-.955 3.488 3.58-.934z"/></svg>
+                                Connect with WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function switchImg(index, imgNum, event) {
+            event.stopPropagation();
+            const imgTag = document.getElementById(`img-${index}`);
+            const dots = event.target.parentElement.querySelectorAll('.dot');
+            dots.forEach(d => d.classList.remove('active'));
+            event.target.classList.add('active');
+            imgTag.src = (imgNum === 1) ? globalProducts[index].img1 : globalProducts[index].img2;
+        }
+
+        function openModal(imgSrc) {
+            document.getElementById("imageModal").style.display = "flex";
+            document.getElementById("fullImage").src = imgSrc;
+        }
+        function closeModal() { document.getElementById("imageModal").style.display = "none"; }
+
+        fetchLiveCatalog();
+    </script>
+</body>
+</html>
